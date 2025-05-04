@@ -1,0 +1,32 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: konvo-db
+    environment:
+      MYSQL_ROOT_PASSWORD: 1311
+      MYSQL_DATABASE: konvoapp
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1311
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - mynetwork
+
+  redis:
+    image: redis:7
+    container_name: redis-cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - mynetwork
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  mynetwork:
