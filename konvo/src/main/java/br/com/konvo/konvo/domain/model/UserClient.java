@@ -1,6 +1,8 @@
 package br.com.konvo.konvo.domain.model;
 
-public class UserClient {
+import java.io.Serializable;
+
+public class UserClient  implements Serializable {
 
     private Long id;
     private String name;

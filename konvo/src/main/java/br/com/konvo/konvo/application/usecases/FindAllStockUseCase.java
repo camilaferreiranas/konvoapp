@@ -18,11 +18,11 @@ public class FindAllStockUseCase {
     }
 
     public List<Stock> findAll() {
-        return repository.findAll().stream().map(stock ->
-                new Stock(
-                        stock.getId(), stock.getCode(),
-                        stock.getCompany(), stock.getPrice())
-        ).collect(Collectors.toList())
-                ;
+        return repository.findAll().stream()
+                .map(stock -> new Stock(stock.getId(),
+                        stock.getCode(), stock.getCompany(),
+                        stock.getPrice()))
+                .collect(Collectors.toList());
+
     }
 }

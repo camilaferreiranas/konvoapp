@@ -10,11 +10,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
-public class StockJpaRepositoryImpl implements StockRepository {
+public class StockRepositoryAdapter implements StockRepository {
 
     private StockJpaRepository stockJpaRepository;
 
-    public StockJpaRepositoryImpl(StockJpaRepository stockJpaRepository) {
+    public StockRepositoryAdapter(StockJpaRepository stockJpaRepository) {
         this.stockJpaRepository = stockJpaRepository;
     }
 
@@ -34,8 +34,11 @@ public class StockJpaRepositoryImpl implements StockRepository {
 
     @Override
     public void save(Stock stock) {
-
+        StockEntity stockEntity = toEntity(stock);
+        stockJpaRepository.save(stockEntity);
     }
+
+
 
     @Override
     public Optional<Stock> findByCode(String code) {
@@ -43,5 +46,17 @@ public class StockJpaRepositoryImpl implements StockRepository {
                 findByCode(code).
                 map(stock -> new Stock(stock.getId(),
                         stock.getCode(), stock.getCompany(), stock.getPrice()));
+    }
+
+    private StockEntity toEntity(Stock stock) {
+        if (stock == null) {
+            return null;
+        }
+        StockEntity entity = new StockEntity();
+        entity.setId(stock.getId());
+        entity.setCode(stock.getCode());
+        entity.setCompany(stock.getCompany());
+        entity.setPrice(stock.getPrice());
+        return entity;
     }
 }

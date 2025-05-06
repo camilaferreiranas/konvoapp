@@ -2,10 +2,11 @@ package br.com.konvo.konvo.domain.model;
 
 import br.com.konvo.konvo.infrastructure.persistence.StockEntity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class Stock {
+public class Stock implements Serializable {
 
     private Long id;
     private String code;

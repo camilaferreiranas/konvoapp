@@ -2,10 +2,11 @@ package br.com.konvo.konvo.domain.model;
 
 import br.com.konvo.konvo.infrastructure.persistence.WalletEntity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class Wallet {
+public class Wallet implements Serializable {
 
 
     private Long id;

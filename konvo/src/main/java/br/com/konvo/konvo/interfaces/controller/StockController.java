@@ -45,4 +45,9 @@ public class StockController {
     public ResponseEntity<Stock> findByCode(@PathVariable("code") String code) {
         return ResponseEntity.ok(findStockByCodeUseCase.execute(code));
     }
+
+    @GetMapping("{id}")
+    public ResponseEntity<Stock> findById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(findStockByIdUseCase.execute(id));
+    }
 }

@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public interface StockRepository {
 
-    Optional<StockEntity> findById(Long id);
-    List<StockEntity> findAll();
+    Optional<Stock> findById(Long id);
+    List<Stock> findAll();
     void save(Stock stock);
-    Optional<StockEntity> findByCode(String code);
+    Optional<Stock> findByCode(String code);
 }
