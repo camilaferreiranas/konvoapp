@@ -37,7 +37,7 @@ public class LoginUseCase {
         var claims = JwtClaimsSet.builder()
                 .issuer("konvoapp")
                 .subject(user.getUsername())
-                .subject(user.getEmail())
+                .claim("email", user.getEmail())
                 .issuedAt(now)
                 .expiresAt(expiresIn)
                 .build();
