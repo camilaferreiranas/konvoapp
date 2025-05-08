@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "users").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/stocks").permitAll()
                         .requestMatchers(HttpMethod.GET, "/stocks/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "v3/**").permitAll()

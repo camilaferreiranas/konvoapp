@@ -7,6 +7,7 @@ import lombok.Data;
 
 @Entity
 @Data
+@Table(name = "user_client")
 public class UserClientEntity {
 
     @Id
@@ -24,5 +25,8 @@ public class UserClientEntity {
     @Column(unique = true)
     @Email
     private String email;
+
+    @NotBlank
+    private String password;
 
 }
