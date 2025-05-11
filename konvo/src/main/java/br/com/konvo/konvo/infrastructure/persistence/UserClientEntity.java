@@ -1,9 +1,12 @@
 package br.com.konvo.konvo.infrastructure.persistence;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -28,5 +31,9 @@ public class UserClientEntity {
 
     @NotBlank
     private String password;
+
+    @OneToMany(mappedBy = "userClient", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<WalletEntity> wallets;
 
 }

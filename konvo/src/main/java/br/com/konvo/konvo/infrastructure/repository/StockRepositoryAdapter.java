@@ -20,7 +20,9 @@ public class StockRepositoryAdapter implements StockRepository {
 
     @Override
     public Optional<Stock> findById(Long id) {
-        return stockJpaRepository.findById(id).map(stock -> new Stock(stock.getId(), stock.getCode(), stock.getCompany(), stock.getPrice()));
+        return stockJpaRepository.findById(id).map(stock ->
+                new Stock(stock.getId(), stock.getCode(),
+                        stock.getCompany(), stock.getPrice()));
     }
 
     @Override
@@ -46,6 +48,12 @@ public class StockRepositoryAdapter implements StockRepository {
                 findByCode(code).
                 map(stock -> new Stock(stock.getId(),
                         stock.getCode(), stock.getCompany(), stock.getPrice()));
+    }
+
+    @Override
+    public void saveAll(List<Stock> stocks) {
+        List<StockEntity> stockEntities = stocks.stream().map(this::toEntity).toList();
+        stockJpaRepository.saveAll(stockEntities);
     }
 
     private StockEntity toEntity(Stock stock) {

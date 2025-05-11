@@ -3,6 +3,7 @@ package br.com.konvo.konvo.infrastructure.persistence;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.math.BigDecimal;

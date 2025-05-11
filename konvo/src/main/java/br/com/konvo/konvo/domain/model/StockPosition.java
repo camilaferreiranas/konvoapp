@@ -14,7 +14,8 @@ public class StockPosition implements Serializable {
     public StockPosition() {
     }
 
-    public StockPosition(Long id, UserClient owner, Wallet wallet, Stock stock, BigDecimal totalInvested) {
+    public StockPosition(Long id, UserClient owner, Wallet wallet,
+                         Stock stock, BigDecimal totalInvested) {
         this.id = id;
         this.owner = owner;
         this.wallet = wallet;

@@ -1,9 +1,6 @@
 package br.com.konvo.konvo.interfaces.controller;
 
-import br.com.konvo.konvo.application.usecases.FindAllStockUseCase;
-import br.com.konvo.konvo.application.usecases.FindStockByCodeUseCase;
-import br.com.konvo.konvo.application.usecases.FindStockByIdUseCase;
-import br.com.konvo.konvo.application.usecases.SaveStockUseCase;
+import br.com.konvo.konvo.application.usecases.*;
 import br.com.konvo.konvo.domain.model.Stock;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,16 +15,18 @@ public class StockController {
     private FindStockByCodeUseCase findStockByCodeUseCase;
     private FindStockByIdUseCase findStockByIdUseCase;
     private SaveStockUseCase saveStockUseCase;
+    private SaveAllStocksUseCase saveAllStocksUseCase;
 
 
     public StockController(FindAllStockUseCase findAllStockUseCase,
                            FindStockByCodeUseCase findStockByCodeUseCase,
                            FindStockByIdUseCase findStockByIdUseCase,
-                           SaveStockUseCase saveStockUseCase) {
+                           SaveStockUseCase saveStockUseCase, SaveAllStocksUseCase saveAllStocksUseCase) {
         this.findAllStockUseCase = findAllStockUseCase;
         this.findStockByCodeUseCase = findStockByCodeUseCase;
         this.findStockByIdUseCase = findStockByIdUseCase;
         this.saveStockUseCase = saveStockUseCase;
+        this.saveAllStocksUseCase = saveAllStocksUseCase;
     }
 
     @GetMapping
@@ -49,5 +48,11 @@ public class StockController {
     @GetMapping("{id}")
     public ResponseEntity<Stock> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(findStockByIdUseCase.execute(id));
+    }
+
+    @PostMapping("/saveAll")
+    public ResponseEntity<Void> saveAll(@RequestBody List<Stock> stocks) {
+        saveAllStocksUseCase.execute(stocks);
+        return ResponseEntity.noContent().build();
     }
 }

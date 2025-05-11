@@ -2,14 +2,18 @@ package br.com.konvo.konvo.infrastructure.persistence;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+
 @Table(name = "wallet")
 public class WalletEntity {
 
@@ -28,4 +32,8 @@ public class WalletEntity {
     private BigDecimal total;
 
     private Boolean status;
+
+    @ManyToOne
+    @JoinColumn(name = "user_client_id", nullable = false)
+    private UserClientEntity userClient;
 }

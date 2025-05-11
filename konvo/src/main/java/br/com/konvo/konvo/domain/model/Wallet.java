@@ -1,7 +1,5 @@
 package br.com.konvo.konvo.domain.model;
 
-import br.com.konvo.konvo.infrastructure.persistence.WalletEntity;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,26 +13,41 @@ public class Wallet implements Serializable {
     private List<StockPosition> stockList;
     private BigDecimal total;
     private Boolean status;
+    private UserClient userClient;
 
     public Wallet() {
     }
 
-    public Wallet(Long id, String name, String description, BigDecimal total, Boolean status) {
+    public Wallet(Long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.total = total;
-        this.status = status;
+        this.total = BigDecimal.valueOf(0.0);
+        this.status = true;
     }
 
 
-    public Wallet(Long id, String name, String description, List<StockPosition> stockList, BigDecimal total, Boolean status) {
+    public Wallet(Long id, String name, String description,
+                  List<StockPosition> stockList, BigDecimal total,
+                  UserClient userClient) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.stockList = stockList;
         this.total = total;
-        this.status = status;
+        this.status = true;
+        this.userClient = userClient;
+    }
+
+    public Wallet(BigDecimal total,
+                  UserClient userClient, String description,
+                  String name, Long id) {
+        this.total = total;
+        this.status = true;
+        this.userClient = userClient;
+        this.description = description;
+        this.name = name;
+        this.id = id;
     }
 
     public Long getId() {
@@ -84,5 +97,13 @@ public class Wallet implements Serializable {
 
     public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+
+    public UserClient getUserClient() {
+        return userClient;
+    }
+
+    public void setUserClient(UserClient userClient) {
+        this.userClient = userClient;
     }
 }

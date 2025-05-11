@@ -1,6 +1,9 @@
 package br.com.konvo.konvo.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
+import java.util.List;
 
 public class UserClient  implements Serializable {
 
@@ -9,6 +12,7 @@ public class UserClient  implements Serializable {
     private String username;
     private String password;
     private String email;
+    private List<Wallet> wallets;
 
     public UserClient() {
     }
@@ -18,6 +22,13 @@ public class UserClient  implements Serializable {
         this.name = name;
         this.username = username;
         this.password = password;
+        this.email = email;
+    }
+
+    public UserClient(Long id, String name, String username, String email) {
+        this.id = id;
+        this.name = name;
+        this.username = username;
         this.email = email;
     }
 
@@ -59,5 +70,13 @@ public class UserClient  implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Wallet> getWallets() {
+        return wallets;
+    }
+
+    public void setWallets(List<Wallet> wallets) {
+        this.wallets = wallets;
     }
 }

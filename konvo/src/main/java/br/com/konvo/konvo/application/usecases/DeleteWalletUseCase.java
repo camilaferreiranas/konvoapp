@@ -1,21 +1,18 @@
 package br.com.konvo.konvo.application.usecases;
 
-import br.com.konvo.konvo.domain.model.StockPosition;
 import br.com.konvo.konvo.domain.repository.WalletRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class BuyStockUseCase {
+public class DeleteWalletUseCase {
 
     private final WalletRepository repository;
 
-    public BuyStockUseCase(WalletRepository repository) {
+    public DeleteWalletUseCase(WalletRepository repository) {
         this.repository = repository;
     }
 
-    public void execute(List<StockPosition> stock, Long id) {
-        repository.buyStock(stock, id);
+    public void execute(Long id) {
+        repository.delete(id);
     }
 }

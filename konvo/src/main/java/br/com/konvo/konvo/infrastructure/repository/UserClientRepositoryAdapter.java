@@ -1,5 +1,6 @@
 package br.com.konvo.konvo.infrastructure.repository;
 
+import br.com.konvo.konvo.domain.exceptions.UserNotFoundException;
 import br.com.konvo.konvo.domain.model.UserClient;
 import br.com.konvo.konvo.domain.repository.UserClientRepository;
 import br.com.konvo.konvo.infrastructure.persistence.UserClientEntity;
@@ -33,7 +34,7 @@ public class UserClientRepositoryAdapter implements UserClientRepository {
         return repository.findById(id).map(user ->
                         new UserClient(user.getId(), user.getName(),
                                 user.getUsername(), user.getPassword(), user.getEmail()))
-                .orElseThrow();
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     @Override
@@ -41,7 +42,7 @@ public class UserClientRepositoryAdapter implements UserClientRepository {
         return repository.findByEmail(email).map(user ->
                         new UserClient(user.getId(), user.getName(),
                                 user.getUsername(), user.getPassword(), user.getEmail()))
-                .orElseThrow();
+                .orElseThrow(() -> new UserNotFoundException("User not found with given e-mail"));
     }
 
     @Override
