@@ -10,10 +10,10 @@ public class Wallet implements Serializable {
     private Long id;
     private String name;
     private String description;
-    private List<StockPosition> stockList;
     private BigDecimal total;
     private Boolean status;
     private UserClient userClient;
+    private List<Stock> stocks;
 
     public Wallet() {
     }
@@ -28,26 +28,26 @@ public class Wallet implements Serializable {
 
 
     public Wallet(Long id, String name, String description,
-                  List<StockPosition> stockList, BigDecimal total,
+                  BigDecimal total,
                   UserClient userClient) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.stockList = stockList;
         this.total = total;
         this.status = true;
         this.userClient = userClient;
     }
 
-    public Wallet(BigDecimal total,
-                  UserClient userClient, String description,
-                  String name, Long id) {
-        this.total = total;
-        this.status = true;
-        this.userClient = userClient;
-        this.description = description;
-        this.name = name;
+    public Wallet(Long id, String name, String description,
+                  BigDecimal total, Boolean status,
+                  UserClient userClient, List<Stock> stocks) {
         this.id = id;
+        this.name = name;
+        this.description = description;
+        this.total = total;
+        this.status = status;
+        this.userClient = userClient;
+        this.stocks = stocks;
     }
 
     public Long getId() {
@@ -75,13 +75,6 @@ public class Wallet implements Serializable {
         this.name = name;
     }
 
-    public List<StockPosition> getStockList() {
-        return stockList;
-    }
-
-    public void setStockList(List<StockPosition> stockList) {
-        this.stockList = stockList;
-    }
 
     public Boolean getStatus() {
         return status;
@@ -105,5 +98,13 @@ public class Wallet implements Serializable {
 
     public void setUserClient(UserClient userClient) {
         this.userClient = userClient;
+    }
+
+    public List<Stock> getStocks() {
+        return stocks;
+    }
+
+    public void setStocks(List<Stock> stocks) {
+        this.stocks = stocks;
     }
 }

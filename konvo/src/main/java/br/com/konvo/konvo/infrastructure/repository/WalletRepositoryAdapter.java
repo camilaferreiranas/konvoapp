@@ -4,7 +4,6 @@ import br.com.konvo.konvo.domain.exceptions.StockNotFoundException;
 import br.com.konvo.konvo.domain.exceptions.UserNotFoundException;
 import br.com.konvo.konvo.domain.exceptions.WalletNotFoundException;
 import br.com.konvo.konvo.domain.model.Stock;
-import br.com.konvo.konvo.domain.model.StockPosition;
 import br.com.konvo.konvo.domain.model.UserClient;
 import br.com.konvo.konvo.domain.model.Wallet;
 import br.com.konvo.konvo.domain.repository.WalletRepository;
@@ -61,27 +60,32 @@ public class WalletRepositoryAdapter implements WalletRepository {
     }
 
     @Override
-    public void buyStock(List<StockPosition> stocks, Long id) {
+    public void buyStock(List<Stock> stocks, Long id) {
         var wallet = repository.findById(id).orElseThrow(() ->
                 new WalletNotFoundException("Wallet not found"));
-        wallet.setPositions(stockPositionEntities(stocks, wallet));
+        wallet.setStocks(stockDomainToEntity(stocks));
         repository.save(wallet);
     }
 
-    private List<StockPositionEntity> stockPositionEntities(List<StockPosition> stocks, WalletEntity walletEntity) {
+    private List<StockEntity> stockDomainToEntity(List<Stock> stocks) {
         return stocks.stream()
-                .map(stockPosition -> {
-                    StockPositionEntity entity = new StockPositionEntity();
-                    entity.setStock(convertStockToEntity(stockPosition.getStock()));
-                    entity.setTotalInvested(stockPosition.getTotalInvested());
-                    entity.setWallet(walletEntity);
-                    entity.setUser(convertUserToEntity(stockPosition.getOwner()));
-                    return entity;
-                })
-                .collect(Collectors.toList());
+                .map(stock -> {
+                  var stockEntity = new StockEntity();
+                  stockEntity.setId(stock.getId());
+                  stockEntity.setCode(stock.getCode());
+                  stockEntity.setCompany(stock.getCompany());
+                  stockEntity.setPrice(stock.getPrice());
+                  return stockEntity;
+                }).collect(Collectors.toList());
+
     }
 
-
+    @Override
+    public List<Wallet> findAll() {
+        return repository.findAll().stream()
+                .map(this::toDomain)
+                .toList();
+    }
 
 
     private UserClientEntity convertUserToEntity(UserClient userClient) {
@@ -92,40 +96,22 @@ public class WalletRepositoryAdapter implements WalletRepository {
 
 
     private Wallet toDomain(WalletEntity walletEntity) {
-        List<StockPosition> stockPositions = walletEntity.getPositions() != null
-                ? walletEntity.getPositions().stream()
-                .map(this::toDomain)
-                .collect(Collectors.toList())
-                : List.of();
-
         UserClient userClient = toDomain(walletEntity.getUserClient());
+        List<Stock> stocks = convertEntityToStock(walletEntity.getStocks());
 
         return new Wallet(
                 walletEntity.getId(),
                 walletEntity.getName(),
                 walletEntity.getDescription(),
-                stockPositions,
                 walletEntity.getTotal(),
-                userClient
+                walletEntity.getStatus(),
+                userClient,
+                stocks
         );
     }
 
-    private StockPosition toDomain(StockPositionEntity entity) {
-        StockPosition position = new StockPosition();
-        position.setStock(convertStockToDomain(entity.getStock()));
-        position.setTotalInvested(entity.getTotalInvested());
-        return position;
-    }
 
 
-    private Stock convertStockToDomain(StockEntity entity) {
-        return new Stock(
-                entity.getId(),
-              entity.getCode(),
-                entity.getCompany(),
-                entity.getPrice()
-        );
-    }
 
     private UserClient toDomain(UserClientEntity entity) {
         return new UserClient(
@@ -147,19 +133,7 @@ public class WalletRepositoryAdapter implements WalletRepository {
         walletEntity.setTotal(wallet.getTotal() != null ? wallet.getTotal() : BigDecimal.ZERO);
         walletEntity.setDescription(wallet.getDescription());
 
-        if (wallet.getStockList() != null && !wallet.getStockList().isEmpty()) {
-            List<StockPositionEntity> positionEntities = wallet.getStockList().stream()
-                    .map(stockPosition -> {
-                        var entity = new StockPositionEntity();
-                        entity.setStock(convertStockToEntity(stockPosition.getStock()));
-                        entity.setTotalInvested(stockPosition.getTotalInvested());
-                        entity.setWallet(walletEntity);
-                        return entity;
-                    })
-                    .collect(Collectors.toList());
 
-            walletEntity.setPositions(positionEntities);
-        }
 
         return walletEntity;
     }
@@ -167,5 +141,12 @@ public class WalletRepositoryAdapter implements WalletRepository {
     private StockEntity convertStockToEntity(Stock stock) {
         return stockJpaRepository.findById(stock.getId())
                 .orElseThrow(() -> new StockNotFoundException("Stock not found"));
+    }
+
+    private List<Stock> convertEntityToStock(List<StockEntity> stocks) {
+        return stocks.stream()
+                .map(stockEntity -> {
+                    return new Stock(stockEntity.getId(), stockEntity.getCode(), stockEntity.getCompany(), stockEntity.getPrice());
+                }).collect(Collectors.toList());
     }
 }

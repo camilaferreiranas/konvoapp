@@ -1,10 +1,7 @@
 package br.com.konvo.konvo.interfaces.controller;
 
-import br.com.konvo.konvo.application.usecases.BuyStockUseCase;
-import br.com.konvo.konvo.application.usecases.DeleteWalletUseCase;
-import br.com.konvo.konvo.application.usecases.FindWalletsByUserUseCase;
-import br.com.konvo.konvo.application.usecases.SaveWalletUseCase;
-import br.com.konvo.konvo.domain.model.StockPosition;
+import br.com.konvo.konvo.application.usecases.*;
+import br.com.konvo.konvo.domain.model.Stock;
 import br.com.konvo.konvo.domain.model.Wallet;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +17,14 @@ public class WalletController {
     private final FindWalletsByUserUseCase findWalletsByUserUseCase;
     private final DeleteWalletUseCase deleteWalletUseCase;
     private final BuyStockUseCase buyStockUseCase;
+    private final FindAllWalletsUseCase findAllWalletsUseCase;
 
-    public WalletController(SaveWalletUseCase saveWalletUseCase, FindWalletsByUserUseCase findWalletsByUserUseCase, DeleteWalletUseCase deleteWalletUseCase, BuyStockUseCase buyStockUseCase) {
+    public WalletController(SaveWalletUseCase saveWalletUseCase, FindWalletsByUserUseCase findWalletsByUserUseCase, DeleteWalletUseCase deleteWalletUseCase, BuyStockUseCase buyStockUseCase, FindAllWalletsUseCase findAllWalletsUseCase) {
         this.saveWalletUseCase = saveWalletUseCase;
         this.findWalletsByUserUseCase = findWalletsByUserUseCase;
         this.deleteWalletUseCase = deleteWalletUseCase;
         this.buyStockUseCase = buyStockUseCase;
+        this.findAllWalletsUseCase = findAllWalletsUseCase;
     }
 
     @PostMapping
@@ -46,8 +45,13 @@ public class WalletController {
     }
 
     @PostMapping("/buystocks/{id}")
-    public ResponseEntity<Void> buyStocks(@RequestBody List<StockPosition> stocks, @PathVariable("id") Long id) {
+    public ResponseEntity<Void> buyStocks(@RequestBody List<Stock> stocks, @PathVariable("id") Long id) {
         buyStockUseCase.execute(stocks, id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Wallet>> findAll() {
+        return ResponseEntity.ok(findAllWalletsUseCase.execute());
     }
 }

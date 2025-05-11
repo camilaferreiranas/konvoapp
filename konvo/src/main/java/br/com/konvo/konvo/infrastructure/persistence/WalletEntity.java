@@ -2,10 +2,12 @@ package br.com.konvo.konvo.infrastructure.persistence;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,8 +28,6 @@ public class WalletEntity {
 
     private String description;
 
-    @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<StockPositionEntity> positions;
 
     private BigDecimal total;
 
@@ -36,4 +36,14 @@ public class WalletEntity {
     @ManyToOne
     @JoinColumn(name = "user_client_id", nullable = false)
     private UserClientEntity userClient;
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "wallet_stock",
+            joinColumns = @JoinColumn(name = "wallet_id"),
+            inverseJoinColumns = @JoinColumn(name = "stock_id")
+    )
+    private List<StockEntity> stocks;
+
 }
