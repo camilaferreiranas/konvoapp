@@ -3,6 +3,7 @@ package br.com.konvo.konvo.infrastructure.repository;
 import br.com.konvo.konvo.domain.exceptions.UserNotFoundException;
 import br.com.konvo.konvo.domain.model.UserClient;
 import br.com.konvo.konvo.domain.repository.UserClientRepository;
+import br.com.konvo.konvo.infrastructure.mapper.UserClientMapper;
 import br.com.konvo.konvo.infrastructure.persistence.UserClientEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,14 +20,13 @@ import java.util.stream.Collectors;
 @Component
 public class UserClientRepositoryAdapter implements UserClientRepository {
 
-    private UserClientJpaRepository repository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final UserClientJpaRepository repository;
+    private final UserClientMapper userClientMapper;
 
 
-    public UserClientRepositoryAdapter(UserClientJpaRepository repository, BCryptPasswordEncoder passwordEncoder) {
+    public UserClientRepositoryAdapter(UserClientJpaRepository repository, UserClientMapper userClientMapper) {
         this.repository = repository;
-        this.passwordEncoder = passwordEncoder;
-
+        this.userClientMapper = userClientMapper;
     }
 
     @Override
@@ -48,11 +48,7 @@ public class UserClientRepositoryAdapter implements UserClientRepository {
     @Override
     @Transactional
     public void save(UserClient userClient) {
-        UserClientEntity user = new UserClientEntity();
-        user.setEmail(userClient.getEmail());
-        user.setName(userClient.getName());
-        user.setUsername(userClient.getUsername());
-        user.setPassword(passwordEncoder.encode(userClient.getPassword()));
+        UserClientEntity user = userClientMapper.toEntity(userClient);
         repository.save(user);
     }
 

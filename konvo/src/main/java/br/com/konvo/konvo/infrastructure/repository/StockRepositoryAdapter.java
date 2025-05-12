@@ -2,6 +2,7 @@ package br.com.konvo.konvo.infrastructure.repository;
 
 import br.com.konvo.konvo.domain.model.Stock;
 import br.com.konvo.konvo.domain.repository.StockRepository;
+import br.com.konvo.konvo.infrastructure.mapper.WalletMapper;
 import br.com.konvo.konvo.infrastructure.persistence.StockEntity;
 import org.springframework.stereotype.Component;
 
@@ -12,10 +13,12 @@ import java.util.stream.Collectors;
 @Component
 public class StockRepositoryAdapter implements StockRepository {
 
-    private StockJpaRepository stockJpaRepository;
+    private final StockJpaRepository stockJpaRepository;
+    private final WalletMapper walletMapper;
 
-    public StockRepositoryAdapter(StockJpaRepository stockJpaRepository) {
+    public StockRepositoryAdapter(StockJpaRepository stockJpaRepository, WalletMapper walletMapper) {
         this.stockJpaRepository = stockJpaRepository;
+        this.walletMapper = walletMapper;
     }
 
     @Override
@@ -36,7 +39,7 @@ public class StockRepositoryAdapter implements StockRepository {
 
     @Override
     public void save(Stock stock) {
-        StockEntity stockEntity = toEntity(stock);
+        StockEntity stockEntity = walletMapper.toEntity(stock);
         stockJpaRepository.save(stockEntity);
     }
 
@@ -52,19 +55,9 @@ public class StockRepositoryAdapter implements StockRepository {
 
     @Override
     public void saveAll(List<Stock> stocks) {
-        List<StockEntity> stockEntities = stocks.stream().map(this::toEntity).toList();
+        List<StockEntity> stockEntities = stocks.stream().map(walletMapper::toEntity).toList();
         stockJpaRepository.saveAll(stockEntities);
     }
 
-    private StockEntity toEntity(Stock stock) {
-        if (stock == null) {
-            return null;
-        }
-        StockEntity entity = new StockEntity();
-        entity.setId(stock.getId());
-        entity.setCode(stock.getCode());
-        entity.setCompany(stock.getCompany());
-        entity.setPrice(stock.getPrice());
-        return entity;
-    }
+
 }
