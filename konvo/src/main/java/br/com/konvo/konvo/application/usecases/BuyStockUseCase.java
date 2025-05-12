@@ -16,6 +16,8 @@ public class BuyStockUseCase {
     }
 
     public void execute(List<Stock> stock, Long id) {
-        repository.buyStock(stock, id);
+        if(!stock.isEmpty()){
+            repository.buyStock(stock, id);
+        }
     }
 }
