@@ -1,5 +1,6 @@
 package br.com.konvo.konvo.application.usecases;
 
+import br.com.konvo.konvo.domain.exceptions.StockNotFoundException;
 import br.com.konvo.konvo.domain.model.Stock;
 import br.com.konvo.konvo.domain.repository.StockRepository;
 import org.springframework.cache.annotation.Cacheable;
@@ -20,6 +21,6 @@ public class FindStockByCodeUseCase {
         return repository.findByCode(code).map(
                 stock -> new Stock(stock.getId(),
                         stock.getCode(), stock.getCompany(),
-                        stock.getPrice())).orElseThrow();
+                        stock.getPrice())).orElseThrow(() -> new StockNotFoundException("Stock not found"));
     }
 }

@@ -31,7 +31,7 @@ public class StockController {
 
     @GetMapping
     public ResponseEntity<List<Stock>> findAll() {
-        return ResponseEntity.ok(findAllStockUseCase.findAll());
+        return ResponseEntity.ok(findAllStockUseCase.execute());
     }
 
     @PostMapping

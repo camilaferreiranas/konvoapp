@@ -17,7 +17,7 @@ public class FindAllStockUseCase {
         this.repository = repository;
     }
 
-    public List<Stock> findAll() {
+    public List<Stock> execute() {
         return repository.findAll().stream()
                 .map(stock -> new Stock(stock.getId(),
                         stock.getCode(), stock.getCompany(),
